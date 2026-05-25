@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OVR-SZ | Premium Oversized T-Shirts</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Global Preloader Transition -->
+    <div id="page-preloader">
+        <h1 class="glitch-text">LOADING THE ARCHIVE</h1>
+    </div>
+
+    <!-- Aesthetic Grain Overlay -->
+    <div class="noise-bg"></div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- Quick View Modal -->
+    <div class="modal-overlay" id="quick-view-overlay"></div>
+    <div class="quick-view-modal" id="quick-view-modal">
+        <button class="close-modal">&times;</button>
+        <div class="modal-content">
+            <div class="modal-image">
+                <img src="" id="modal-img" alt="Product Image">
+            </div>
+            <div class="modal-details">
+                <h2 id="modal-title">Product Title</h2>
+                <p id="modal-price" class="price">$0.00</p>
+                <p class="modal-desc">100% Heavyweight 300GSM Cotton. Extreme drop shoulder. Boxy, cropped fit. Limited edition run.</p>
+                
+                <div class="size-selector">
+                    <p>SELECT SIZE:</p>
+                    <div class="size-btns">
+                        <button class="size-btn" data-size="S">S</button>
+                        <button class="size-btn" data-size="M">M</button>
+                        <button class="size-btn" data-size="L">L</button>
+                        <button class="size-btn" data-size="XL">XL</button>
+                    </div>
+                <div class="size-recommender">
+                    <button id="open-size-calc" class="secondary-btn small-btn">NOT SURE YOUR SIZE? USE CALCULATOR</button>
+                    <div id="size-calc-ui" class="hidden">
+                        <label>Height (cm): <input type="range" id="calc-height" min="150" max="200" value="175"> <span id="height-val">175cm</span></label>
+                        <label>Weight (kg): <input type="range" id="calc-weight" min="50" max="120" value="70"> <span id="weight-val">70kg</span></label>
+                        <p class="calc-result">RECOMMENDED SIZE: <strong id="calc-recommendation">M</strong></p>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button id="modal-add-to-cart" class="add-to-cart-action" disabled>SELECT A SIZE</button>
+                    <button class="apple-pay-btn magnetic">Buy with <span>Pay</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Drawer -->
+    <div class="cart-overlay"></div>
+    <div class="cart-drawer">
+        <div class="cart-header">
+            <h2>YOUR CART</h2>
+            <button class="close-cart">&times;</button>
+        </div>
+        <div class="shipping-progress-container">
+            <p id="shipping-msg">Add $150 to unlock FREE SHIPPING</p>
+            <div class="progress-bar"><div class="progress-fill" id="shipping-fill"></div></div>
+        </div>
+        <div class="cart-items">
+            <p class="empty-cart-msg">Your cart is currently empty.</p>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>TOTAL</span>
+                <span id="cart-total-price">$0.00</span>
+            </div>
+            <div class="cart-checkout-actions">
+                <button class="checkout-btn magnetic">PROCEED TO CHECKOUT</button>
+                <button class="apple-pay-btn magnetic">Buy with <span>Pay</span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Drawer -->
+    <div class="auth-overlay"></div>
+    <div class="auth-drawer" id="auth-drawer">
+        <div class="auth-header">
+            <h2 id="auth-drawer-title">ACCOUNT</h2>
+            <button class="close-auth">&times;</button>
+        </div>
+        
+        <!-- Login / Register View -->
+        <div id="auth-forms-view">
+            <div class="auth-toggle">
+                <button class="toggle-btn active" id="show-login">LOGIN</button>
+                <button class="toggle-btn" id="show-register">REGISTER</button>
+            </div>
+            
+            <form class="auth-form" id="login-form">
+                <input type="email" id="login-email" placeholder="EMAIL" required>
+                <input type="password" id="login-password" placeholder="PASSWORD" required>
+                <button type="submit" class="magnetic cta-btn small-cta">SIGN IN</button>
+            </form>
+
+            <form class="auth-form hidden" id="register-form">
+                <input type="text" id="reg-name" placeholder="FULL NAME" required>
+                <input type="email" id="reg-email" placeholder="EMAIL" required>
+                <input type="password" id="reg-password" placeholder="PASSWORD" required>
+                <button type="submit" class="magnetic cta-btn small-cta">CREATE ACCOUNT</button>
+            </form>
+        </div>
+
+        <!-- Logged In Profile View -->
+        <div id="profile-view" class="hidden">
+            <div class="profile-card">
+                <div class="avatar" id="profile-avatar">U</div>
+                <h3 id="profile-name">User Name</h3>
+                <p id="profile-email">user@email.com</p>
+            </div>
+            
+            <div class="order-history">
+                <h3>ORDER HISTORY</h3>
+                <div class="mock-order">
+                    <p><strong>ORDER #00192</strong></p>
+                    <p>Status: Preparing for shipment</p>
+                    <p class="price">$95.00</p>
+                </div>
+                <div class="mock-order">
+                    <p><strong>ORDER #00045</strong></p>
+                    <p>Status: Delivered</p>
+                    <p class="price">$180.00</p>
+                </div>
+            </div>
+
+            <button id="logout-btn" class="magnetic secondary-btn">LOG OUT</button>
+        </div>
+    </div>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobile-menu">
+        <button class="close-mobile-menu">&times;</button>
+        <div class="mobile-links">
+            <a href="#mission" class="mobile-link">MISSION</a>
+            <a href="#shop" class="mobile-link">SHOP</a>
+            <a href="#fit-guide" class="mobile-link">FIT GUIDE</a>
+            <a href="#quality" class="mobile-link">QUALITY</a>
+        </div>
+    </div>
+
+    <!-- Visual Search Overlay -->
+    <div class="search-overlay" id="search-overlay">
+        <button class="close-search">&times;</button>
+        <div class="search-container">
+            <input type="text" id="live-search-input" placeholder="SEARCH THE ARCHIVE..." autocomplete="off">
+            <div class="search-results-grid" id="search-results">
+                <!-- Search results injected here -->
+            </div>
+            <div class="empty-state hidden" id="search-empty-state">
+                <h2>NO RESULTS FOUND.</h2>
+                <p>Try searching for 'Green', 'Tiger', or 'Manifest'.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <nav class="navbar">
+        <div class="logo">OVR-SZ</div>
+        
+        <div class="nav-links desktop-only">
+            <a href="#mission" class="magnetic">MISSION</a>
+            <a href="#shop" class="magnetic">SHOP</a>
+            <a href="#fit-guide" class="magnetic">FIT GUIDE</a>
+            <a href="#quality" class="magnetic">QUALITY</a>
+        </div>
+
+        <div class="nav-actions">
+            <button class="search-btn magnetic" id="nav-search-btn">SEARCH</button>
+            <button class="auth-btn magnetic" id="nav-auth-btn">LOGIN</button>
+            <button class="cart-btn magnetic" id="nav-cart-btn">CART (0)</button>
+            <button class="hamburger mobile-only" id="hamburger-btn">☰</button>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">THE<br>HEAVYWEIGHT<br>DROP.</h1>
+            <p class="hero-subtitle">Premium 300GSM Cotton. Boxy Fit. No Restocks.</p>
+            <button class="cta-btn magnetic" onclick="document.getElementById('shop').scrollIntoView({behavior: 'smooth'})">ENTER THE DROP</button>
+        </div>
+        <div class="hero-image-container">
+            <img src="assets/founder_hero.jpg" alt="OVR-SZ Founder leading from the front" class="hero-image">
+        </div>
+    </header>
+
+    <section id="mission" class="mission-section scroll-reveal">
+        <div class="mission-content">
+            <h2 class="section-title">LEADING FROM THE FRONT.</h2>
+            <p class="mission-text">
+                OVR-SZ was born out of a frustration with the modern silhouette. We don't believe in fast fashion, and we don't believe in restocking. Every piece is a limited edition drop, cut from ultra-heavyweight cotton, designed with a severe, architectural drop-shoulder fit. When it's gone, it's gone.
+            </p>
+        </div>
+    </section>
+
+    <div class="marquee-container">
+        <div class="marquee-content">
+            <span>LIMITED EDITION // 100% HEAVYWEIGHT COTTON // PRE-SHRUNK // NO RESTOCKS // </span>
+            <span>LIMITED EDITION // 100% HEAVYWEIGHT COTTON // PRE-SHRUNK // NO RESTOCKS // </span>
+            <span>LIMITED EDITION // 100% HEAVYWEIGHT COTTON // PRE-SHRUNK // NO RESTOCKS // </span>
+        </div>
+    </div>
+
+    <section id="shop" class="products-section">
+        <h2 class="section-title">THE ARCHIVE [DROP 01]</h2>
+        <div class="product-grid">
+            
+            <!-- Product 1 -->
+            <div class="product-card scroll-reveal" data-name="Bhai Chara On Top (Green)" data-price="95.00" data-img="assets/product_bhaichara.jpg">
+                <div class="image-wrapper skeleton">
+                    <img src="assets/product_bhaichara.jpg" alt="Bhai Chara Graphic Tee" loading="lazy">
+                    <video class="hover-video" src="https://www.w3schools.com/html/mov_bbb.mp4" muted loop playsinline></video>
+                    <div class="badge">HOT</div>
+                    <button class="quick-view-btn magnetic">QUICK VIEW</button>
+                </div>
+                <div class="product-info">
+                    <h3>BHAI CHARA (GREEN)</h3>
+                    <p class="price">$95.00</p>
+                </div>
+            </div>
+
+            <!-- Product 2 -->
+            <div class="product-card scroll-reveal" data-name="Carpediem (Teal)" data-price="85.00" data-img="assets/product_carpediem.jpg">
+                <div class="image-wrapper">
+                    <img src="assets/product_carpediem.jpg" alt="Carpediem Teal Tee">
+                    <button class="quick-view-btn magnetic">QUICK VIEW</button>
+                </div>
+                <div class="product-info">
+                    <h3>CARPEDIEM (TEAL)</h3>
+                    <p class="price">$85.00</p>
+                </div>
+            </div>
+
+            <!-- Product 3 -->
+            <div class="product-card scroll-reveal" data-name="Manifest Tee (Forest)" data-price="85.00" data-img="assets/manifest_front.png">
+                <div class="image-wrapper hover-swap">
+                    <img src="assets/manifest_front.png" alt="Manifest Tee Front" class="img-front">
+                    <img src="assets/manifest_back.png" alt="Manifest Tee Back" class="img-back">
+                    <div class="badge" style="background:#444;">SOLD OUT</div>
+                    <button class="quick-view-btn sold-out-btn" disabled>SOLD OUT</button>
+                </div>
+                <div class="product-info">
+                    <h3>MANIFEST TEE (FOREST)</h3>
+                    <p class="price">$85.00</p>
+                </div>
+            </div>
+
+            <!-- Product 4 -->
+            <div class="product-card scroll-reveal" data-name="Uncommon Tee (Cream)" data-price="85.00" data-img="assets/uncommon_front.jpg">
+                <div class="image-wrapper hover-swap">
+                    <img src="assets/uncommon_front.jpg" alt="Uncommon Tee Front" class="img-front">
+                    <img src="assets/uncommon_alt.jpg" alt="Uncommon Tee Alt" class="img-back">
+                    <div class="badge">SELLING FAST</div>
+                    <button class="quick-view-btn magnetic">QUICK VIEW</button>
+                </div>
+                <div class="product-info">
+                    <h3>UNCOMMON TEE (CREAM)</h3>
+                    <p class="price">$85.00</p>
+                </div>
+            </div>
+
+            <!-- NEW PRODUCT 1 -->
+            <div class="product-card scroll-reveal" data-name="Nightcrawlers Eagle" data-price="90.00" data-img="assets/product_nightcrawlers.jpg">
+                <div class="image-wrapper">
+                    <img src="assets/product_nightcrawlers.jpg" alt="Nightcrawlers Eagle Graphic">
+                    <div class="badge">NEW</div>
+                    <button class="quick-view-btn magnetic">QUICK VIEW</button>
+                </div>
+                <div class="product-info">
+                    <h3>NIGHTCRAWLERS EAGLE</h3>
+                    <p class="price">$90.00</p>
+                </div>
+            </div>
+
+            <!-- NEW PRODUCT 2 -->
+            <div class="product-card scroll-reveal" data-name="Wilderness Collective Wolf" data-price="90.00" data-img="assets/product_wilderness.jpg">
+                <div class="image-wrapper">
+                    <img src="assets/product_wilderness.jpg" alt="Wilderness Collective Wolf">
+                    <button class="quick-view-btn magnetic">QUICK VIEW</button>
+                </div>
+                <div class="product-info">
+                    <h3>WILDERNESS WOLF</h3>
+                    <p class="price">$90.00</p>
+                </div>
+            </div>
+
+            <!-- NEW PRODUCT 3 -->
+            <div class="product-card scroll-reveal" data-name="Osaka Nights Tiger" data-price="95.00" data-img="assets/product_osaka.jpg">
+                <div class="image-wrapper">
+                    <img src="assets/product_osaka.jpg" alt="Osaka Nights Tiger">
+                    <div class="badge">LIMITED</div>
+                    <button class="quick-view-btn magnetic">QUICK VIEW</button>
+                </div>
+                <div class="product-info">
+                    <h3>OSAKA NIGHTS TIGER</h3>
+                    <p class="price">$95.00</p>
+                </div>
+            </div>
+
+            <!-- NEW PRODUCT 4 -->
+            <div class="product-card scroll-reveal" data-name="Urban Archives" data-price="85.00" data-img="assets/product_urban.jpg">
+                <div class="image-wrapper">
+                    <img src="assets/product_urban.jpg" alt="Urban Archives">
+                    <button class="quick-view-btn magnetic">QUICK VIEW</button>
+                </div>
+                <div class="product-info">
+                    <h3>URBAN ARCHIVES</h3>
+                    <p class="price">$85.00</p>
+                </div>
+            </div>
+
+            <!-- LATEST ADDITIONS -->
+            <div class="product-card scroll-reveal" data-name="Artisan Noir" data-price="95.00" data-img="assets/product_artisan.jpg">
+                <div class="image-wrapper">
+                    <img src="assets/product_artisan.jpg" alt="Artisan Noir Tiger">
+                    <div class="badge">HOT</div>
+                    <button class="quick-view-btn magnetic">QUICK VIEW</button>
+                </div>
+                <div class="product-info">
+                    <h3>ARTISAN NOIR</h3>
+                    <p class="price">$95.00</p>
+                </div>
+            </div>
+
+            <div class="product-card scroll-reveal" data-name="Geometric Green" data-price="85.00" data-img="assets/product_geometric.jpg">
+                <div class="image-wrapper">
+                    <img src="assets/product_geometric.jpg" alt="Geometric Green">
+                    <button class="quick-view-btn magnetic">QUICK VIEW</button>
+                </div>
+                <div class="product-info">
+                    <h3>GEOMETRIC GREEN</h3>
+                    <p class="price">$85.00</p>
+                </div>
+            </div>
+
+            <div class="product-card scroll-reveal" data-name="Urban Explorers Map" data-price="90.00" data-img="assets/product_urban2.jpg">
+                <div class="image-wrapper">
+                    <img src="assets/product_urban2.jpg" alt="Urban Explorers Map">
+                    <div class="badge">NEW</div>
+                    <button class="quick-view-btn magnetic">QUICK VIEW</button>
+                </div>
+                <div class="product-info">
+                    <h3>URBAN EXPLORERS MAP</h3>
+                    <p class="price">$90.00</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="fit-guide" class="fit-guide-section scroll-reveal">
+        <h2 class="section-title">THE ARCHITECTURAL FIT</h2>
+        <div class="fit-guide-content">
+            <div class="fit-visualizer">
+                <div class="fit-box" id="fit-display">
+                    <h3>OVERSIZED & CROPPED</h3>
+                    <p>Our tees are designed to drape aggressively over the shoulders while sitting perfectly at the waist to prevent the "dress" look.</p>
+                </div>
+            </div>
+            <div class="fit-controls">
+                <h3>VISUALIZE THE FIT</h3>
+                <button class="fit-btn active" data-fit="true-to-size">TRUE TO SIZE (Recommended)</button>
+                <button class="fit-btn" data-fit="size-up">SIZE UP (Extreme Oversized)</button>
+                <p id="fit-desc" class="fit-desc">Go with your standard size. It is already graded to fit massive in the chest and shoulders.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="quality" class="quality-section scroll-reveal">
+        <h2 class="section-title">UNCOMPROMISING QUALITY</h2>
+        <div class="features-grid">
+            <div class="feature">
+                <h3>300GSM COTTON</h3>
+                <p>Ultra-heavyweight, breathable, and structured. This fabric drapes, it doesn't cling.</p>
+            </div>
+            <div class="feature">
+                <h3>BOXY, DROPPED FIT</h3>
+                <p>Architecturally designed shoulders that fall perfectly. Cropped slightly at the waist.</p>
+            </div>
+            <div class="feature">
+                <h3>PRE-SHRUNK</h3>
+                <p>Washed and treated before sewing so the fit remains identical after 100 washes.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="newsletter-section scroll-reveal">
+        <h2>NEVER MISS A DROP</h2>
+        <p>We do not restock. Enter your email to be notified 24 hours before the next capsule goes live.</p>
+        <form class="newsletter-form">
+            <input type="email" placeholder="ENTER YOUR EMAIL" required>
+            <button type="submit" class="magnetic">SUBSCRIBE</button>
+        </form>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="#">SHIPPING & RETURNS</a>
+            <a href="#">FAQ</a>
+            <a href="#">INSTAGRAM</a>
+            <a href="#">TIKTOK</a>
+        </div>
+        <h2>OVR-SZ</h2>
+        <p>REDEFINING THE BOXY FIT.</p>
+        <p class="copyright">© 2026 OVR-SZ. ALL RIGHTS RESERVED.</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
