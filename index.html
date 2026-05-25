@@ -28,7 +28,10 @@
         <button class="close-modal">&times;</button>
         <div class="modal-content">
             <div class="modal-image">
-                <img src="" id="modal-img" alt="Product Image">
+                <div class="modal-img-container">
+                    <img src="" id="modal-img" alt="Product Image">
+                </div>
+                <div class="modal-thumbnails" id="modal-thumbnails"></div>
             </div>
             <div class="modal-details">
                 <h2 id="modal-title">Product Title</h2>
@@ -194,7 +197,7 @@
             <button class="cta-btn magnetic" onclick="document.getElementById('shop').scrollIntoView({behavior: 'smooth'})">ENTER THE DROP</button>
         </div>
         <div class="hero-image-container">
-            <img src="assets/founder_hero.jpg" alt="OVR-SZ Founder leading from the front" class="hero-image">
+            <img src="assets/Founderhero/founder_hero.jpg" alt="OVR-SZ Founder leading from the front" class="hero-image parallax-image">
         </div>
     </header>
 
@@ -220,9 +223,9 @@
         <div class="product-grid">
             
             <!-- Product 1 -->
-            <div class="product-card scroll-reveal" data-name="Bhai Chara On Top (Green)" data-price="95.00" data-img="assets/product_bhaichara.jpg">
-                <div class="image-wrapper skeleton">
-                    <img src="assets/product_bhaichara.jpg" alt="Bhai Chara Graphic Tee" loading="lazy">
+            <div class="product-card scroll-reveal" data-name="Bhai Chara On Top (Green)" data-price="95.00" data-img="assets/Bhaichara/product_bhaichara.jpg" data-gallery="assets/Bhaichara/product_bhaichara.jpg,assets/Bhaichara/image2.png,assets/Bhaichara/image3.png,assets/Bhaichara/image5.png,assets/Bhaichara/image7.png">
+                <div class="image-wrapper hover-swap">
+                    <img src="assets/Bhaichara/product_bhaichara.jpg" class="img-front" alt="T-Shirt">
                     <video class="hover-video" src="https://www.w3schools.com/html/mov_bbb.mp4" muted loop playsinline></video>
                     <div class="badge">HOT</div>
                     <button class="quick-view-btn magnetic">QUICK VIEW</button>
@@ -234,9 +237,9 @@
             </div>
 
             <!-- Product 2 -->
-            <div class="product-card scroll-reveal" data-name="Carpediem (Teal)" data-price="85.00" data-img="assets/product_carpediem.jpg">
+            <div class="product-card scroll-reveal" data-name="Carpediem (Teal)" data-price="85.00" data-img="assets/Carpediem/product_carpediem.jpg" data-gallery="assets/Carpediem/product_carpediem.jpg,assets/Carpediem/mockup-Hand-on-head.jpg,assets/Carpediem/image53.png,assets/Carpediem/image55.png,assets/Carpediem/image56.png,assets/Carpediem/image57.png">
                 <div class="image-wrapper">
-                    <img src="assets/product_carpediem.jpg" alt="Carpediem Teal Tee">
+                    <img src="assets/Carpediem/product_carpediem.jpg" class="img-front" alt="T-Shirt">
                     <button class="quick-view-btn magnetic">QUICK VIEW</button>
                 </div>
                 <div class="product-info">
@@ -246,10 +249,10 @@
             </div>
 
             <!-- Product 3 -->
-            <div class="product-card scroll-reveal" data-name="Manifest Tee (Forest)" data-price="85.00" data-img="assets/manifest_front.png">
+            <div class="product-card scroll-reveal" data-name="Manifest Tee (Forest)" data-price="85.00" data-img="assets/Manifest/manifest_front.png" data-gallery="assets/Manifest/manifest_front.png,assets/Manifest/manifest_back.png,assets/Manifest/image35.png,assets/Manifest/image37.png,assets/Manifest/image40.png">
                 <div class="image-wrapper hover-swap">
-                    <img src="assets/manifest_front.png" alt="Manifest Tee Front" class="img-front">
-                    <img src="assets/manifest_back.png" alt="Manifest Tee Back" class="img-back">
+                    <img src="assets/Manifest/manifest_front.png" class="img-front" alt="T-Shirt">
+                    <img src="assets/Manifest/manifest_back.png" alt="Manifest Tee Back" class="img-back">
                     <div class="badge" style="background:#444;">SOLD OUT</div>
                     <button class="quick-view-btn sold-out-btn" disabled>SOLD OUT</button>
                 </div>
@@ -260,10 +263,10 @@
             </div>
 
             <!-- Product 4 -->
-            <div class="product-card scroll-reveal" data-name="Uncommon Tee (Cream)" data-price="85.00" data-img="assets/uncommon_front.jpg">
+            <div class="product-card scroll-reveal" data-name="Uncommon Tee (Cream)" data-price="85.00" data-img="assets/Uncommon/uncommon_front.jpg" data-gallery="assets/Uncommon/uncommon_front.jpg,assets/Uncommon/uncommon_alt.jpg,assets/Uncommon/770d5bf7-ea54-447c-b6fa-93c894606362.png,assets/Uncommon/7ec8ea11-307e-4dd2-a89b-960fa169b216.png">
                 <div class="image-wrapper hover-swap">
-                    <img src="assets/uncommon_front.jpg" alt="Uncommon Tee Front" class="img-front">
-                    <img src="assets/uncommon_alt.jpg" alt="Uncommon Tee Alt" class="img-back">
+                    <img src="assets/Uncommon/uncommon_front.jpg" class="img-front" alt="T-Shirt">
+                    <img src="assets/Uncommon/uncommon_alt.jpg" alt="Uncommon Tee Alt" class="img-back">
                     <div class="badge">SELLING FAST</div>
                     <button class="quick-view-btn magnetic">QUICK VIEW</button>
                 </div>
@@ -274,9 +277,9 @@
             </div>
 
             <!-- NEW PRODUCT 1 -->
-            <div class="product-card scroll-reveal" data-name="Nightcrawlers Eagle" data-price="90.00" data-img="assets/product_nightcrawlers.jpg">
+            <div class="product-card scroll-reveal" data-name="Nightcrawlers Eagle" data-price="90.00" data-img="assets/nightcrawlers/product_nightcrawlers.jpg">
                 <div class="image-wrapper">
-                    <img src="assets/product_nightcrawlers.jpg" alt="Nightcrawlers Eagle Graphic">
+                    <img src="assets/nightcrawlers/product_nightcrawlers.jpg" alt="Nightcrawlers Eagle Graphic">
                     <div class="badge">NEW</div>
                     <button class="quick-view-btn magnetic">QUICK VIEW</button>
                 </div>
@@ -287,9 +290,9 @@
             </div>
 
             <!-- NEW PRODUCT 2 -->
-            <div class="product-card scroll-reveal" data-name="Wilderness Collective Wolf" data-price="90.00" data-img="assets/product_wilderness.jpg">
+            <div class="product-card scroll-reveal" data-name="Wilderness Collective" data-price="85.00" data-img="assets/wilderness/product_wilderness.jpg">
                 <div class="image-wrapper">
-                    <img src="assets/product_wilderness.jpg" alt="Wilderness Collective Wolf">
+                    <img src="assets/wilderness/product_wilderness.jpg" alt="Wilderness Collective Wolf">
                     <button class="quick-view-btn magnetic">QUICK VIEW</button>
                 </div>
                 <div class="product-info">
@@ -299,9 +302,9 @@
             </div>
 
             <!-- NEW PRODUCT 3 -->
-            <div class="product-card scroll-reveal" data-name="Osaka Nights Tiger" data-price="95.00" data-img="assets/product_osaka.jpg">
+            <div class="product-card scroll-reveal" data-name="Osaka Nights" data-price="95.00" data-img="assets/osaka/product_osaka.jpg">
                 <div class="image-wrapper">
-                    <img src="assets/product_osaka.jpg" alt="Osaka Nights Tiger">
+                    <img src="assets/osaka/product_osaka.jpg" alt="Osaka Nights Tiger">
                     <div class="badge">LIMITED</div>
                     <button class="quick-view-btn magnetic">QUICK VIEW</button>
                 </div>
@@ -312,9 +315,9 @@
             </div>
 
             <!-- NEW PRODUCT 4 -->
-            <div class="product-card scroll-reveal" data-name="Urban Archives" data-price="85.00" data-img="assets/product_urban.jpg">
+            <div class="product-card scroll-reveal" data-name="Urban Archives" data-price="80.00" data-img="assets/urban/product_urban.jpg">
                 <div class="image-wrapper">
-                    <img src="assets/product_urban.jpg" alt="Urban Archives">
+                    <img src="assets/urban/product_urban.jpg" alt="Urban Archives">
                     <button class="quick-view-btn magnetic">QUICK VIEW</button>
                 </div>
                 <div class="product-info">
@@ -324,9 +327,9 @@
             </div>
 
             <!-- LATEST ADDITIONS -->
-            <div class="product-card scroll-reveal" data-name="Artisan Noir" data-price="95.00" data-img="assets/product_artisan.jpg">
+            <div class="product-card scroll-reveal" data-name="Artisan Noir" data-price="95.00" data-img="assets/artisan/product_artisan.jpg">
                 <div class="image-wrapper">
-                    <img src="assets/product_artisan.jpg" alt="Artisan Noir Tiger">
+                    <img src="assets/artisan/product_artisan.jpg" alt="Artisan Noir Tiger">
                     <div class="badge">HOT</div>
                     <button class="quick-view-btn magnetic">QUICK VIEW</button>
                 </div>
@@ -336,9 +339,9 @@
                 </div>
             </div>
 
-            <div class="product-card scroll-reveal" data-name="Geometric Green" data-price="85.00" data-img="assets/product_geometric.jpg">
+            <div class="product-card scroll-reveal" data-name="Geometric Green" data-price="85.00" data-img="assets/geometric/product_geometric.jpg">
                 <div class="image-wrapper">
-                    <img src="assets/product_geometric.jpg" alt="Geometric Green">
+                    <img src="assets/geometric/product_geometric.jpg" alt="Geometric Green">
                     <button class="quick-view-btn magnetic">QUICK VIEW</button>
                 </div>
                 <div class="product-info">
@@ -347,9 +350,9 @@
                 </div>
             </div>
 
-            <div class="product-card scroll-reveal" data-name="Urban Explorers Map" data-price="90.00" data-img="assets/product_urban2.jpg">
+            <div class="product-card scroll-reveal" data-name="Urban Explorers" data-price="85.00" data-img="assets/urban2/product_urban2.jpg">
                 <div class="image-wrapper">
-                    <img src="assets/product_urban2.jpg" alt="Urban Explorers Map">
+                    <img src="assets/urban2/product_urban2.jpg" alt="Urban Explorers Map">
                     <div class="badge">NEW</div>
                     <button class="quick-view-btn magnetic">QUICK VIEW</button>
                 </div>
