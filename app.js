@@ -160,12 +160,34 @@ try {
             currentSelectedProduct = {
                 name: card.getAttribute('data-name'),
                 price: card.getAttribute('data-price'),
-                img: card.getAttribute('data-img')
+                img: card.getAttribute('data-img'),
+                gallery: card.getAttribute('data-gallery')
             };
 
             modalImg.src = currentSelectedProduct.img;
             modalTitle.textContent = currentSelectedProduct.name;
             modalPrice.textContent = `$${currentSelectedProduct.price}`;
+            
+            // Build Thumbnail Gallery
+            const thumbnailsContainer = document.getElementById('modal-thumbnails');
+            if (thumbnailsContainer) {
+                thumbnailsContainer.innerHTML = '';
+                if (currentSelectedProduct.gallery) {
+                    const images = currentSelectedProduct.gallery.split(',');
+                    images.forEach((imgSrc, index) => {
+                        const thumb = document.createElement('img');
+                        thumb.src = imgSrc;
+                        if (index === 0) thumb.classList.add('active');
+                        
+                        thumb.addEventListener('click', () => {
+                            Array.from(thumbnailsContainer.children).forEach(c => c.classList.remove('active'));
+                            thumb.classList.add('active');
+                            modalImg.src = imgSrc;
+                        });
+                        thumbnailsContainer.appendChild(thumb);
+                    });
+                }
+            }
             
             resetModal();
             modalOverlay.classList.add('active');
