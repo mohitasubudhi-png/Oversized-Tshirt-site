@@ -1,3 +1,19 @@
+// --- 0. FIREBASE INITIALIZATION ---
+const firebaseConfig = {
+  apiKey: "AIzaSyBZm899J0GqhNZYxFPVJIbTkS2BNeWrxTQ",
+  authDomain: "oversized-tshirt.firebaseapp.com",
+  databaseURL: "https://oversized-tshirt-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "oversized-tshirt",
+  storageBucket: "oversized-tshirt.firebasestorage.app",
+  messagingSenderId: "799746953576",
+  appId: "1:799746953576:web:55d374d3a37d3463f606dd",
+  measurementId: "G-RW71HCSEGM"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.database();
+
 document.addEventListener("DOMContentLoaded", () => {
 try {
     // --- 0. PRELOADER & SKELETON LOADERS ---
@@ -14,26 +30,12 @@ try {
         // Ensure skeleton class
         wrapper.classList.add('skeleton');
         
-        // Inject Video for Hover Preview
-        if (!wrapper.querySelector('video')) {
-            const video = document.createElement('video');
-            video.className = 'hover-video';
-            video.src = 'https://www.w3schools.com/html/mov_bbb.mp4';
-            video.muted = true; video.loop = true; video.playsInline = true;
-            wrapper.appendChild(video);
-        }
-
         // Handle image load
         if (img.complete) {
             wrapper.classList.add('loaded');
         } else {
             img.addEventListener('load', () => wrapper.classList.add('loaded'));
         }
-        
-        // Video Play/Pause on hover
-        const vid = wrapper.querySelector('video');
-        card.addEventListener('mouseenter', () => vid.play().catch(()=>{}));
-        card.addEventListener('mouseleave', () => { vid.pause(); vid.currentTime = 0; });
     });
 
     // --- 1. CUSTOM CURSOR & MAGNETIC BUTTONS ---
@@ -277,6 +279,9 @@ try {
 
     const saveCart = () => {
         localStorage.setItem('ovrsz_cart', JSON.stringify(cart));
+        if (currentUser) {
+            db.ref('users/' + currentUser.uid + '/cart').set(cart);
+        }
     };
 
     const openCart = () => {
@@ -382,7 +387,19 @@ try {
 
     // Add to cart from Modal
     modalAddToCart.addEventListener('click', () => {
-        if (!selectedSize || !currentSelectedProduct) return;
+        if (!currentSelectedProduct) return;
+        
+        if (!selectedSize) {
+            alert("Please select a size first!");
+            return;
+        }
+
+        // AUTH CHECK: Force login if adding to cart
+        if (!currentUser) {
+            document.getElementById('nav-auth-btn').click(); // Opens Auth Modal
+            document.querySelector('.close-modal').click(); // Closes Quick View Modal
+            return;
+        }
 
         const cartId = currentSelectedProduct.name + selectedSize;
         const existingItem = cart.find(i => i.id === cartId);
@@ -410,20 +427,111 @@ try {
         
         setTimeout(() => {
             modalAddToCart.classList.remove('btn-added');
-            modalAddToCart.textContent = `ADD TO CART - ${selectedSize}`;
+            modalAddToCart.textContent = `ADD TO CART`;
             navCartBtn.classList.remove('bounce');
-            
-            modalOverlay.classList.remove('active');
-            modal.classList.remove('active');
-            openCart();
-        }, 1000);
+        }, 1500);
+
+        // Open cart drawer immediately after adding
+        openCart();
     });
 
-    // Checkout & Apple Pay Button Alert
-    const preLaunchAlert = () => alert("Checkout is currently disabled during the pre-launch phase. Join the newsletter to be notified when the drop goes live!");
+    const modalWishlist = document.getElementById('modal-wishlist');
+    if (modalWishlist) {
+        modalWishlist.addEventListener('click', () => {
+            if (!currentUser) {
+                document.getElementById('nav-auth-btn').click(); 
+                document.querySelector('.close-modal').click(); 
+                return;
+            }
+            if (currentSelectedProduct) {
+                const wishlistRef = db.ref('users/' + currentUser.uid + '/wishlist/' + currentSelectedProduct.name);
+                wishlistRef.set({
+                    name: currentSelectedProduct.name,
+                    price: currentSelectedProduct.price,
+                    img: currentSelectedProduct.img,
+                    timestamp: firebase.database.ServerValue.TIMESTAMP
+                }).then(() => {
+                    modalWishlist.innerHTML = "&#9829; SAVED";
+                    setTimeout(() => { modalWishlist.innerHTML = "&#9825; WISHLIST"; }, 2000);
+                }).catch((error) => {
+                    alert("Firebase Database Error: Please make sure your Realtime Database Rules are set to true! " + error.message);
+                });
+            }
+        });
+    }
+
+    // Checkout & Apple Pay Logic (Stripe)
+    const handleCheckout = async (e) => {
+        if (!currentUser) {
+            document.getElementById('nav-auth-btn').click();
+            return;
+        }
+
+        // Auto-inject item if checking out directly from Quick View
+        const isFromModal = e.target.closest('.quick-view-modal');
+        if (isFromModal) {
+            if (!currentSelectedProduct) return;
+            if (!selectedSize) {
+                alert("Please select a size first!");
+                return;
+            }
+            const cartId = currentSelectedProduct.name + selectedSize;
+            const existingItem = cart.find(i => i.id === cartId);
+            if (existingItem) {
+                existingItem.qty += 1;
+            } else {
+                cart.push({
+                    id: cartId,
+                    name: currentSelectedProduct.name,
+                    price: currentSelectedProduct.price,
+                    img: currentSelectedProduct.img,
+                    size: selectedSize,
+                    qty: 1
+                });
+            }
+            saveCart();
+            renderCart();
+        }
+
+        if (!cart || cart.length === 0) {
+            alert("Your cart is empty!");
+            return;
+        }
+
+        const btn = e.target;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = "PROCESSING...";
+        btn.disabled = true;
+
+        try {
+            // This endpoint will automatically work once deployed to Vercel
+            const response = await fetch('/api/checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cart: cart })
+            });
+
+            const session = await response.json();
+            
+            if (session.error) {
+                alert("Checkout Error: " + session.error);
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                return;
+            }
+
+            // Redirect to Stripe Checkout page
+            window.location.href = session.url;
+        } catch (error) {
+            alert("Could not connect to payment server. Make sure this is deployed to Vercel!");
+            console.error(error);
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+    };
     
     document.querySelectorAll('.checkout-btn, .apple-pay-btn').forEach(btn => {
-        btn.addEventListener('click', preLaunchAlert);
+        btn.addEventListener('click', handleCheckout);
     });
 
     // --- 5.5 SEARCH OVERLAY LOGIC ---
@@ -522,7 +630,7 @@ try {
         });
     }
 
-    // --- 8. AUTHENTICATION SYSTEM (MOCK) ---
+    // --- 8. AUTHENTICATION SYSTEM (FIREBASE) ---
     const authOverlay = document.querySelector('.auth-overlay');
     const authDrawer = document.getElementById('auth-drawer');
     const navAuthBtn = document.getElementById('nav-auth-btn');
@@ -540,17 +648,16 @@ try {
     const profileAvatar = document.getElementById('profile-avatar');
     const logoutBtn = document.getElementById('logout-btn');
 
-    // State Management
-    let currentUser = JSON.parse(localStorage.getItem('ovrsz_user')) || null;
+    let currentUser = null;
 
-    const renderAuthState = () => {
-        if (currentUser) {
+    const renderAuthState = (user) => {
+        if (user) {
             navAuthBtn.textContent = 'PROFILE';
             authFormsView.classList.add('hidden');
             profileView.classList.remove('hidden');
-            profileName.textContent = currentUser.name;
-            profileEmail.textContent = currentUser.email;
-            profileAvatar.textContent = currentUser.name.charAt(0).toUpperCase();
+            profileName.textContent = user.displayName || user.email.split('@')[0];
+            profileEmail.textContent = user.email;
+            profileAvatar.textContent = (user.displayName || user.email).charAt(0).toUpperCase();
         } else {
             navAuthBtn.textContent = 'LOGIN';
             authFormsView.classList.remove('hidden');
@@ -558,7 +665,59 @@ try {
         }
     };
 
-    renderAuthState();
+    // Listen for Firebase Auth State Changes
+    auth.onAuthStateChanged((user) => {
+        currentUser = user;
+        renderAuthState(user);
+        if (user) {
+            closeAuth(); // Close modal on successful login
+            
+            // Sync cloud cart to local on login
+            db.ref('users/' + user.uid + '/cart').once('value').then((snapshot) => {
+                const cloudCart = snapshot.val();
+                if (cloudCart) {
+                    cart = cloudCart;
+                    localStorage.setItem('ovrsz_cart', JSON.stringify(cart));
+                    if (typeof renderCart === 'function') renderCart();
+                } else if (cart.length > 0) {
+                    saveCart();
+                }
+            });
+
+            // Sync wishlist to UI
+            db.ref('users/' + user.uid + '/wishlist').on('value', (snapshot) => {
+                const wishlistItems = snapshot.val();
+                const container = document.getElementById('profile-wishlist-items');
+                if (container) {
+                    if (wishlistItems) {
+                        container.innerHTML = '';
+                        Object.values(wishlistItems).forEach(item => {
+                            container.innerHTML += `
+                                <div class="wishlist-item" style="display:flex; align-items:center; gap:1rem; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem;">
+                                    <img src="${item.img}" style="width:50px; height:60px; object-fit:cover;">
+                                    <div>
+                                        <p style="font-family: var(--font-heading); margin-bottom: 0.2rem;">${item.name}</p>
+                                        <p style="color: #888; font-size: 0.9rem;">$${item.price}</p>
+                                    </div>
+                                    <button class="remove-wishlist-btn" data-name="${item.name}" style="margin-left:auto; background:none; border:none; color:#ff4444; font-size:1.5rem; cursor:pointer;">&times;</button>
+                                </div>
+                            `;
+                        });
+
+                        // Add remove listeners
+                        container.querySelectorAll('.remove-wishlist-btn').forEach(btn => {
+                            btn.addEventListener('click', (e) => {
+                                const name = e.target.getAttribute('data-name');
+                                db.ref('users/' + user.uid + '/wishlist/' + name).remove();
+                            });
+                        });
+                    } else {
+                        container.innerHTML = '<p class="empty-msg" style="color:#888;">No items in wishlist yet.</p>';
+                    }
+                }
+            });
+        }
+    });
 
     const openAuth = () => {
         authOverlay.classList.add('active');
@@ -573,6 +732,18 @@ try {
     if (navAuthBtn) navAuthBtn.addEventListener('click', openAuth);
     if (closeAuthBtn) closeAuthBtn.addEventListener('click', closeAuth);
     if (authOverlay) authOverlay.addEventListener('click', closeAuth);
+
+    // Prompt login when clicking Add to Cart
+    const addCartBtns = document.querySelectorAll('.add-cart-btn, .quick-view-btn');
+    addCartBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            // Only require login for adding to cart, not quick view browsing
+            if (e.target.classList.contains('add-cart-btn') && !currentUser) {
+                e.stopPropagation();
+                openAuth();
+            }
+        });
+    });
 
     // Form Toggle Logic
     if (showLoginBtn) {
@@ -598,11 +769,19 @@ try {
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const email = document.getElementById('login-email').value;
-            // Mock auth bypass: Just log them in as long as they typed something
-            const mockUser = { name: email.split('@')[0], email: email };
-            localStorage.setItem('ovrsz_user', JSON.stringify(mockUser));
-            currentUser = mockUser;
-            renderAuthState();
+            const pass = document.getElementById('login-password').value;
+            const btn = loginForm.querySelector('button');
+            btn.textContent = "LOGGING IN...";
+            
+            auth.signInWithEmailAndPassword(email, pass)
+                .then(() => {
+                    btn.textContent = "LOGIN";
+                    loginForm.reset();
+                })
+                .catch((error) => {
+                    alert("Login Failed: " + error.message);
+                    btn.textContent = "LOGIN";
+                });
         });
     }
 
@@ -612,19 +791,39 @@ try {
             e.preventDefault();
             const name = document.getElementById('reg-name').value;
             const email = document.getElementById('reg-email').value;
-            const mockUser = { name: name, email: email };
-            localStorage.setItem('ovrsz_user', JSON.stringify(mockUser));
-            currentUser = mockUser;
-            renderAuthState();
+            const pass = document.getElementById('reg-password').value;
+            const btn = registerForm.querySelector('button');
+            btn.textContent = "CREATING...";
+            
+            auth.createUserWithEmailAndPassword(email, pass)
+                .then((userCredential) => {
+                    return userCredential.user.updateProfile({
+                        displayName: name
+                    });
+                })
+                .then(() => {
+                    btn.textContent = "CREATE ACCOUNT";
+                    registerForm.reset();
+                })
+                .catch((error) => {
+                    alert("Registration Failed: " + error.message);
+                    btn.textContent = "CREATE ACCOUNT";
+                });
         });
     }
 
     // Logout
     if (logoutBtn) {
         logoutBtn.addEventListener('click', () => {
-            localStorage.removeItem('ovrsz_user');
-            currentUser = null;
-            renderAuthState();
+            auth.signOut().then(() => {
+                // CLEAR CART STATE FOR PRIVACY
+                cart = [];
+                localStorage.removeItem('ovrsz_cart');
+                if (typeof renderCart === 'function') renderCart();
+                
+                alert("Successfully logged out.");
+                closeAuth();
+            });
         });
     }
 

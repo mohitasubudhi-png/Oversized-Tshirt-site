@@ -57,7 +57,10 @@
                 </div>
                 
                 <div class="modal-actions">
-                    <button id="modal-add-to-cart" class="add-to-cart-action" disabled>SELECT A SIZE</button>
+                    <div class="modal-actions-row">
+                        <button id="modal-add-to-cart" class="add-cart-btn magnetic">ADD TO CART</button>
+                        <button id="modal-wishlist" class="wishlist-btn magnetic">&#9825; WISHLIST</button>
+                    </div>
                     <button class="apple-pay-btn magnetic">Buy with <span>Pay</span></button>
                 </div>
             </div>
@@ -125,6 +128,13 @@
                 <div class="avatar" id="profile-avatar">U</div>
                 <h3 id="profile-name">User Name</h3>
                 <p id="profile-email">user@email.com</p>
+            </div>
+
+            <div class="profile-section">
+                <h4>YOUR WISHLIST</h4>
+                <div id="profile-wishlist-items" class="wishlist-items-container">
+                    <p class="empty-msg">No items in wishlist yet.</p>
+                </div>
             </div>
             
             <div class="order-history">
@@ -254,7 +264,7 @@
                     <img src="assets/Manifest/manifest_front.png" class="img-front" alt="T-Shirt">
                     <img src="assets/Manifest/manifest_back.png" alt="Manifest Tee Back" class="img-back">
                     <div class="badge" style="background:#444;">SOLD OUT</div>
-                    <button class="quick-view-btn magnetic">QUICK VIEW</button>
+                    <button class="quick-view-btn sold-out-btn magnetic" style="cursor:not-allowed;">SOLD OUT</button>
                 </div>
                 <div class="product-info">
                     <h3>MANIFEST TEE (FOREST)</h3>
@@ -412,15 +422,20 @@
 
     <footer class="footer">
         <div class="footer-links">
-            <a href="#">SHIPPING & RETURNS</a>
-            <a href="#">FAQ</a>
-            <a href="#">INSTAGRAM</a>
-            <a href="#">TIKTOK</a>
+            <a href="javascript:void(0)" onclick="alert('Coming soon!')">SHIPPING & RETURNS</a>
+            <a href="javascript:void(0)" onclick="alert('Coming soon!')">FAQ</a>
+            <a href="javascript:void(0)" onclick="alert('Coming soon!')">INSTAGRAM</a>
+            <a href="javascript:void(0)" onclick="alert('Coming soon!')">TIKTOK</a>
         </div>
         <h2>OVR-SZ</h2>
         <p>REDEFINING THE BOXY FIT.</p>
-        <p class="copyright">© 2026 OVR-SZ. ALL RIGHTS RESERVED.</p>
+        <p class="copyright">&copy; 2026 OVR-SZ. ALL RIGHTS RESERVED.</p>
     </footer>
+
+    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script src="app.js"></script>
 </body>

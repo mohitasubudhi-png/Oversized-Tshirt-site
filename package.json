@@ -1,0 +1,8 @@
+{
+  "name": "oversized-tshirt-store",
+  "version": "1.0.0",
+  "description": "E-commerce store with Stripe and Firebase",
+  "dependencies": {
+    "stripe": "^14.10.0"
+  }
+}
